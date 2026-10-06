@@ -228,30 +228,41 @@
 
         // RSS Feeds থেকে খবর আনার ফাংশন
         async function fetchNews() {
-            const feedUrls = [
-                { name: 'আগামীর সময়', url: 'https://api.rss2json.com/v1/api.json?rss_url=https%3A%2F%2Fwww.agamirshomoy.com%2Frss' },
-                { name: 'Dhaka Post', url: 'https://api.rss2json.com/v1/api.json?rss_url=https%3A%2F%2Fwww.dhakapost.com%2Frss' },
-                { name: 'Samakal', url: 'https://api.rss2json.com/v1/api.json?rss_url=https%3A%2F%2Fsamakal.com%2Frss' }
+            const feeds = [
+                { name: 'আগামীর সময়', url: 'https://www.agamirshomoy.com/rss' },
+                { name: 'Dhaka Post', url: 'https://www.dhakapost.com/rss' },
+                { name: 'Samakal', url: 'https://samakal.com/rss' }
             ];
 
             allNews = [];
 
-            for (let feed of feedUrls) {
+            for (let feed of feeds) {
                 try {
-                    let res = await fetch(feed.url);
+                    // CORS Bypass Proxy
+                    const apiUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(feed.url)}`;
+                    let res = await fetch(apiUrl);
                     let data = await res.json();
-                    if (data.items) {
-                        data.items.forEach(item => {
+                    
+                    if (data.contents) {
+                        let parser = new DOMParser();
+                        let xmlDoc = parser.parseFromString(data.contents, "text/xml");
+                        let items = xmlDoc.querySelectorAll("item");
+
+                        items.forEach(item => {
+                            let title = item.querySelector("title") ? item.querySelector("title").textContent : '';
+                            let link = item.querySelector("link") ? item.querySelector("link").textContent : '#';
+                            let pubDateText = item.querySelector("pubDate") ? item.querySelector("pubDate").textContent : '';
+                            
                             allNews.push({
-                                title: item.title,
-                                link: item.link,
-                                pubDate: new Date(item.pubDate),
+                                title: title,
+                                link: link,
+                                pubDate: pubDateText ? new Date(pubDateText) : new Date(),
                                 source: feed.name
                             });
                         });
                     }
                 } catch (e) {
-                    console.log('Error fetching feed:', e);
+                    console.log('Error fetching feed for ' + feed.name, e);
                 }
             }
 
@@ -266,11 +277,11 @@
             container.innerHTML = '';
 
             if (newsList.length === 0) {
-                container.innerHTML = '<div class="loading-text">কোনো খবর পাওয়া যায়নি।</div>';
+                container.innerHTML = '<div class="loading-text">কোনো খবর পাওয়া যায়নি। অনুগ্রহ করে পেজ রিফ্রেশ করুন।</div>';
                 return;
             }
 
-            newsList.slice(0, 20).forEach(item => {
+            newsList.slice(0, 25).forEach(item => {
                 const timeAgo = getTimeAgo(item.pubDate);
                 const html = `
                     <div class="news-item">
@@ -298,16 +309,4 @@
 
         // সময় হিসাব করার ফাংশন
         function getTimeAgo(date) {
-            const minutes = Math.floor((new Date() - date) / 60000);
-            if (isNaN(minutes) || minutes < 1) return 'এইমাত্র';
-            if (minutes < 60) return `${minutes} মিনিট আগে`;
-            const hours = Math.floor(minutes / 60);
-            if (hours < 24) return `${hours} ঘণ্টা আগে`;
-            return `${Math.floor(hours / 24)} দিন আগে`;
-        }
-
-        // পেজ লোড হলে খবর চলে আসবে
-        fetchNews();
-    </script>
-</body>
-</html>
+            const minutes = Math.floor((new Date() - date) / 6
