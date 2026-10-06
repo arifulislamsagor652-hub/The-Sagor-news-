@@ -9,11 +9,11 @@
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: Arial, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
         body {
-            background-color: #f8f9fa;
+            background-color: #f4f6f9;
             color: #333;
             padding: 10px;
         }
@@ -21,45 +21,46 @@
         .container {
             max-width: 600px;
             margin: 0 auto;
-            background: #fff;
+            background: #ffffff;
             padding: 15px;
             border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.05);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
         }
 
         /* Header Section */
         .header {
             text-align: center;
-            padding: 10px 0;
+            padding: 10px 0 5px;
         }
 
         .logo {
             font-size: 32px;
-            font-weight: bold;
+            font-weight: 800;
             color: #d32f2f;
+            letter-spacing: -0.5px;
         }
 
         .tagline {
-            font-size: 14px;
+            font-size: 13px;
             color: #666;
-            margin-top: -5px;
+            margin-top: -2px;
         }
 
         .date-bar {
             text-align: center;
-            font-size: 14px;
-            font-weight: bold;
-            margin: 15px 0 10px;
+            font-size: 13px;
+            font-weight: 600;
+            margin: 12px 0;
             color: #444;
         }
 
-        /* Quick Info Grid */
+        /* Quick Emergency Bar */
         .info-grid {
             display: flex;
             gap: 8px;
             overflow-x: auto;
             padding-bottom: 5px;
-            margin-bottom: 10px;
+            margin-bottom: 12px;
         }
 
         .info-card {
@@ -70,43 +71,55 @@
             text-align: center;
             font-size: 11px;
             background: #fafafa;
+            flex-shrink: 0;
         }
 
         .info-card span {
             display: block;
             font-weight: bold;
             color: #000;
+            font-size: 13px;
         }
 
-        .live-update {
+        .live-status {
             font-size: 12px;
             color: #2e7d32;
             text-align: center;
             margin-bottom: 15px;
-            font-weight: bold;
+            font-weight: 600;
         }
 
-        /* Source Selector Filter */
-        .filter-btn {
+        .live-dot {
+            height: 8px;
+            width: 8px;
+            background-color: #2e7d32;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 4px;
+        }
+
+        /* Filter Selector */
+        .filter-box {
             width: 100%;
-            padding: 10px;
-            background: #f1f3f4;
+            padding: 10px 12px;
+            background: #f8f9fa;
             border: 1px solid #dadce0;
-            border-radius: 5px;
-            text-align: left;
+            border-radius: 6px;
             font-size: 14px;
             color: #1a73e8;
             font-weight: bold;
             margin-bottom: 15px;
+            outline: none;
+            cursor: pointer;
         }
 
-        /* Section Title */
+        /* Section Heading */
         .section-title {
             font-size: 18px;
             font-weight: bold;
-            border-bottom: 2px solid #333;
-            padding-bottom: 5px;
-            margin-bottom: 15px;
+            border-bottom: 2px solid #222;
+            padding-bottom: 6px;
+            margin-bottom: 10px;
         }
 
         /* News List */
@@ -115,13 +128,17 @@
             padding: 12px 0;
         }
 
+        .news-item:last-child {
+            border-bottom: none;
+        }
+
         .news-title {
             font-size: 16px;
-            font-weight: bold;
+            font-weight: 700;
             color: #111;
             text-decoration: none;
             display: block;
-            margin-bottom: 5px;
+            margin-bottom: 6px;
             line-height: 1.4;
         }
 
@@ -134,12 +151,22 @@
             color: #777;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
         }
 
         .source-tag {
             font-weight: bold;
-            color: #333;
+            color: #000;
+            background: #eee;
+            padding: 2px 6px;
+            border-radius: 3px;
+        }
+
+        .loading-text {
+            text-align: center;
+            color: #666;
+            padding: 20px 0;
+            font-size: 14px;
         }
     </style>
 </head>
@@ -148,77 +175,139 @@
     <div class="container">
         <!-- Logo Header -->
         <div class="header">
-            <div class="logo">সাগর নিউজ</div>
+            <div class="logo">দ্য সাগর নিউজ</div>
             <div class="tagline">— খবর সব এক ঠিকানায় —</div>
         </div>
 
         <!-- Date Bar -->
-        <div class="date-bar">
-            বুধবার | ০৭ অক্টোবর ২০২৬
+        <div class="date-bar" id="current-date">
+            লোড হচ্ছে...
         </div>
 
-        <!-- Emergency Numbers Grid -->
+        <!-- Emergency Services -->
         <div class="info-grid">
-            <div class="info-card">ℹ️ <span>৩৩৩</span>তথ্যসেবা</div>
+            <div class="info-card">ℹ️️ <span>৩৩৩</span>তথ্যসেবা</div>
             <div class="info-card">🚨 <span>৯৯৯</span>জরুরি</div>
             <div class="info-card">🚒 <span>১০২</span>ফায়ার</div>
             <div class="info-card">⚖️ <span>১০৩</span>আইনি সহায়তা</div>
         </div>
 
         <!-- Live Status -->
-        <div class="live-update">
-            ● সর্বশেষ আপডেট: ৩:৪৭ AM
+        <div class="live-status">
+            <span class="live-dot"></span> সর্বশেষ আপডেট: <span id="live-time"></span>
         </div>
 
-        <!-- Filter Dropdown Simulation -->
-        <button class="filter-btn">উৎস নির্বাচন ▼</button>
+        <!-- Filter Dropdown -->
+        <select class="filter-box" id="sourceFilter" onchange="filterNews()">
+            <option value="all">উৎস নির্বাচন: সকল সংবাদপত্র</option>
+            <option value="আগামীর সময়">দৈনিক আগামীর সময়</option>
+            <option value="Dhaka Post">ঢাকা পোস্ট</option>
+            <option value="Samakal">সমকাল</option>
+        </select>
 
-        <!-- Section Heading -->
+        <!-- Section Title -->
         <div class="section-title">সর্বশেষ খবর</div>
 
-        <!-- News Feed Items -->
-        <div class="news-list">
-            <div class="news-item">
-                <a href="#" class="news-title">আইপিইউর নির্বাহী কমিটির সদস্য হলেন জহরত আদিব</a>
-                <div class="news-meta">
-                    <span class="source-tag">ঢাকা পোস্ট</span>
-                    <span>প্রকাশ: ৩:৩৯ AM</span>
-                    <span>• ৭ মিনিট আগে</span>
-                </div>
-            </div>
-
-            <div class="news-item">
-                <a href="#" class="news-title">সাব-রেজিস্ট্রারদের বদলিতে প্রথমবারের মতো লটারি</a>
-                <div class="news-meta">
-                    <span class="source-tag">সমকাল</span>
-                    <span>প্রকাশ: ৩:৩৪ AM</span>
-                    <span>• ১৩ মিনিট আগে</span>
-                </div>
-            </div>
-
-            <div class="news-item">
-                <a href="#" class="news-title">অবশেষে মুখ খুললেন রোনালদো, চাইলেন ক্ষমা ও নিজের শাস্তি</a>
-                <div class="news-meta">
-                    <span class="source-tag">বাংলাদেশ প্রতিদিন</span>
-                    <span>প্রকাশ: ৩:৩০ AM</span>
-                    <span>• ১৬ মিনিট আগে</span>
-                </div>
-            </div>
-
-            <div class="news-item">
-                <a href="#" class="news-title">'বর্ষসেরা পর্যটন প্রযুক্তিবিষয়ক উদ্যোগ' পুরস্কার পেল বিডিটিকেটস</a>
-                <div class="news-meta">
-                    <span class="source-tag">বাংলানিউজ২৪</span>
-                    <span>প্রকাশ: ৩:২৭ AM</span>
-                    <span>• ২০ মিনিট আগে</span>
-                </div>
-            </div>
+        <!-- News Feed Container -->
+        <div class="news-list" id="newsFeed">
+            <div class="loading-text">খবর লোড করা হচ্ছে...</div>
         </div>
     </div>
 
+    <script>
+        // আজকের তারিখ ও সময়
+        function updateDateTime() {
+            const now = new Date();
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            document.getElementById('current-date').innerText = now.toLocaleDateString('bn-BD', options);
+            document.getElementById('live-time').innerText = now.toLocaleTimeString('bn-BD');
+        }
+        updateDateTime();
+
+        let allNews = [];
+
+        // RSS Feeds থেকে খবর আনার ফাংশন
+        async function fetchNews() {
+            const feedUrls = [
+                { name: 'আগামীর সময়', url: 'https://api.rss2json.com/v1/api.json?rss_url=https%3A%2F%2Fwww.agamirshomoy.com%2Frss' },
+                { name: 'Dhaka Post', url: 'https://api.rss2json.com/v1/api.json?rss_url=https%3A%2F%2Fwww.dhakapost.com%2Frss' },
+                { name: 'Samakal', url: 'https://api.rss2json.com/v1/api.json?rss_url=https%3A%2F%2Fsamakal.com%2Frss' }
+            ];
+
+            allNews = [];
+
+            for (let feed of feedUrls) {
+                try {
+                    let res = await fetch(feed.url);
+                    let data = await res.json();
+                    if (data.items) {
+                        data.items.forEach(item => {
+                            allNews.push({
+                                title: item.title,
+                                link: item.link,
+                                pubDate: new Date(item.pubDate),
+                                source: feed.name
+                            });
+                        });
+                    }
+                } catch (e) {
+                    console.log('Error fetching feed:', e);
+                }
+            }
+
+            // সময় অনুযায়ী সাজানো (নতুন খবর সবার উপরে)
+            allNews.sort((a, b) => b.pubDate - a.pubDate);
+            renderNews(allNews);
+        }
+
+        // স্ক্রিনে খবর দেখানোর ফাংশন
+        function renderNews(newsList) {
+            const container = document.getElementById('newsFeed');
+            container.innerHTML = '';
+
+            if (newsList.length === 0) {
+                container.innerHTML = '<div class="loading-text">কোনো খবর পাওয়া যায়নি।</div>';
+                return;
+            }
+
+            newsList.slice(0, 20).forEach(item => {
+                const timeAgo = getTimeAgo(item.pubDate);
+                const html = `
+                    <div class="news-item">
+                        <a href="${item.link}" target="_blank" class="news-title">${item.title}</a>
+                        <div class="news-meta">
+                            <span class="source-tag">${item.source}</span>
+                            <span>• ${timeAgo}</span>
+                        </div>
+                    </div>
+                `;
+                container.innerHTML += html;
+            });
+        }
+
+        // উৎস অনুযায়ী ফিল্টার করা
+        function filterNews() {
+            const selected = document.getElementById('sourceFilter').value;
+            if (selected === 'all') {
+                renderNews(allNews);
+            } else {
+                const filtered = allNews.filter(item => item.source === selected);
+                renderNews(filtered);
+            }
+        }
+
+        // সময় হিসাব করার ফাংশন
+        function getTimeAgo(date) {
+            const minutes = Math.floor((new Date() - date) / 60000);
+            if (isNaN(minutes) || minutes < 1) return 'এইমাত্র';
+            if (minutes < 60) return `${minutes} মিনিট আগে`;
+            const hours = Math.floor(minutes / 60);
+            if (hours < 24) return `${hours} ঘণ্টা আগে`;
+            return `${Math.floor(hours / 24)} দিন আগে`;
+        }
+
+        // পেজ লোড হলে খবর চলে আসবে
+        fetchNews();
+    </script>
 </body>
 </html>
-
-    </script>  
-</body>  
-</html>  
